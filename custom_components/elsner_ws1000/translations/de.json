@@ -1,0 +1,28 @@
+{
+  "title": "Elsner WS1000",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Elsner WS1000 einrichten",
+        "description": "Gib die IP-Adresse oder den Hostnamen der WS1000 an. Port 4242 wird automatisch verwendet.",
+        "data": {
+          "host": "IP-Adresse / Hostname"
+        }
+      },
+      "reconfigure": {
+        "title": "Elsner WS1000 konfigurieren",
+        "description": "Ändere die IP-Adresse bzw. den Hostnamen.",
+        "data": {
+          "host": "IP-Adresse / Hostname"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zur WS1000 konnte nicht hergestellt werden."
+    },
+    "abort": {
+      "already_configured": "Diese WS1000 ist bereits eingerichtet.",
+      "reconfigure_successful": "Konfiguration aktualisiert."
+    }
+  }
+}
