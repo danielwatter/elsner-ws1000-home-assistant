@@ -303,18 +303,6 @@ Unchanged:
 - positioning, Smart STOP and group control
 
 
-## V1.3.0 - New master version
-
-Release/versioning cleanup only. No functional protocol or entity behavior was intentionally changed compared with V1.23.0.
-
-- version normalized to `1.3.0` for the new GitHub/HACS master
-- runtime logic unchanged
-- protocol commands unchanged
-- entity unique IDs unchanged
-- device identifiers unchanged
-- migration behavior unchanged
-
-
 ## V1.23.0 - Structural cleanup
 
 No functional protocol or entity behavior was intentionally changed.
@@ -328,3 +316,15 @@ No functional protocol or entity behavior was intentionally changed.
 - dynamic WS1000 names remain dynamic and unchanged
 - protocol constants, command sequences, entity unique IDs and device
   identifiers were checked automatically against V1.22.1
+## V1.3.0 - New master version
+
+Release/versioning cleanup only. No functional protocol or entity behavior was intentionally changed compared with V1.23.0.
+
+- version normalized to `1.3.0` for the new GitHub/HACS master
+- runtime logic unchanged
+- protocol commands unchanged
+- entity unique IDs unchanged
+- device identifiers unchanged
+- migration behavior unchanged
+
+
