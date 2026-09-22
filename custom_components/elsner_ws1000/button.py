@@ -5,7 +5,6 @@ import asyncio
 from homeassistant.components.button import ButtonEntity
 
 from .entity import WS1000Entity
-from .labels import NAME_BUILDING_AUTO
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -18,7 +17,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class WS1000BuildingAutoButton(WS1000Entity, ButtonEntity):
     """Set all currently manual WS1000 drives back to automatic mode."""
 
-    _attr_name = NAME_BUILDING_AUTO
+    _attr_translation_key = "building_automatic_mode"
     _attr_icon = "mdi:home-automation"
 
     def __init__(self, coordinator, entry):

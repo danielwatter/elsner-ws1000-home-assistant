@@ -326,7 +326,7 @@ class WS1000Client:
         return self._outer(inner)
 
     def set_position(self, object_id: int, position: int, tilt: int = 0) -> None:
-        """Set Fahrposition and Lamellenposition with confirmed B command."""
+        """Set travel and slat position with the confirmed B command."""
         sock = None
         try:
             sock = self._connect()
@@ -487,7 +487,7 @@ class WS1000Client:
         self._send_mode(object_id, lock_code=0x01 if enabled else 0x02)
 
     def set_actuator_lock(self, object_id: int, enabled: bool) -> None:
-        """Set/reset Aktor-Sperre for one actuator slot."""
+        """Set or reset the actuator lock for one actuator slot."""
         self._send_mode(
             object_id,
             actuator_lock_code=0x01 if enabled else 0x02,

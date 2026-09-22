@@ -3,7 +3,6 @@ import asyncio
 from homeassistant.components.switch import SwitchEntity
 
 from .entity import WS1000Entity, drive_device_info
-from .labels import NAME_ACTUATOR_LOCK, NAME_AUTO_LOCK
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -18,11 +17,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class WS1000AutoLock(WS1000Entity, SwitchEntity):
+    _attr_translation_key = "automatic_lock"
+
     def __init__(self, coordinator, entry, drive):
         super().__init__(coordinator, entry, f"autolock_{drive.object_id}")
         self.drive = drive
-        self._attr_name = NAME_AUTO_LOCK
-
 
     @property
     def device_info(self):
@@ -48,9 +47,9 @@ class WS1000AutoLock(WS1000Entity, SwitchEntity):
 
 
 class WS1000ActuatorLock(WS1000Entity, SwitchEntity):
-    """Per-actuator Aktor-Sperre confirmed by Elsner."""
+    """Per-actuator lock confirmed by Elsner."""
 
-    _attr_name = NAME_ACTUATOR_LOCK
+    _attr_translation_key = "actuator_lock"
     _attr_icon = "mdi:lock"
 
     def __init__(self, coordinator, entry, drive):
@@ -73,8 +72,7 @@ class WS1000ActuatorLock(WS1000Entity, SwitchEntity):
             .get("gui_df", {})
             .get("actuator_lock_info")
         )
-        # GUI_DF values:
-        # 0 disabled, 1 visible, 2 highlighted/active, 3 alarm.
+        # GUI_DF values: 0 disabled, 1 visible, 2 highlighted/active, 3 alarm.
         # Treat highlighted/active or alarm as locked.
         if raw is None:
             return None

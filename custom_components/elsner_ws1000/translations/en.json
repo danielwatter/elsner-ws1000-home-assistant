@@ -24,5 +24,385 @@
       "already_configured": "This WS1000 is already configured.",
       "reconfigure_successful": "Configuration updated."
     }
+  },
+  "device": {
+    "groups_controller": {
+      "name": "Elsner WS1000 Groups"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "inside_temperature": {
+        "name": "Indoor temperature"
+      },
+      "inside_humidity": {
+        "name": "Indoor humidity"
+      },
+      "outside_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "brightness": {
+        "name": "Brightness"
+      },
+      "wind_speed": {
+        "name": "Wind speed"
+      },
+      "position": {
+        "name": "Position"
+      },
+      "slat_position": {
+        "name": "Slat position"
+      },
+      "gui_smoke_alarm": {
+        "name": "Smoke alarm",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_motion_alarm": {
+        "name": "Motion alarm",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_automatic_delay": {
+        "name": "Automatic delay",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_wind_direction": {
+        "name": "Wind direction",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_wind_gap": {
+        "name": "Wind gap",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_air_condition": {
+        "name": "Air conditioning",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_fresh_air": {
+        "name": "Fresh air",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_outdoor_temperature_condition": {
+        "name": "Outdoor temperature condition",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_indoor_temperature_condition": {
+        "name": "Indoor temperature condition",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_indoor_co2_condition": {
+        "name": "Indoor CO2 condition",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_indoor_humidity_condition": {
+        "name": "Indoor humidity condition",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_opening_time": {
+        "name": "Opening time",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_keep_closed_time": {
+        "name": "Keep-closed time",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_sun": {
+        "name": "Sun",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_cloud": {
+        "name": "Cloud",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_sun_cloud_wait_time": {
+        "name": "Sun/cloud wait time",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_night": {
+        "name": "Night",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_solar_position": {
+        "name": "Solar position",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_travel_limit": {
+        "name": "Travel limit",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_night_cooling": {
+        "name": "Night cooling",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_safety_lock": {
+        "name": "Safety lock",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_sensor_error": {
+        "name": "Sensor error",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_timer": {
+        "name": "Timer",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_outdoor_temperature_lock_hot": {
+        "name": "Outdoor temperature lock - hot",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_outdoor_temperature_lock_cold": {
+        "name": "Outdoor temperature lock - cold",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_indoor_temperature_lock_cold": {
+        "name": "Indoor temperature lock - cold",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_recirculation_heat_gain": {
+        "name": "Recirculation heat gain",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_recirculation_condensation_reduction": {
+        "name": "Recirculation condensation reduction",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_emergency_mode": {
+        "name": "Emergency mode",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_actuator_lock": {
+        "name": "Actuator lock",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_air_quality_lock": {
+        "name": "Air quality lock",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_hcl_start_stop": {
+        "name": "HCL start/stop",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_fancoil_auto": {
+        "name": "Fan coil automatic mode",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      },
+      "gui_reference_run": {
+        "name": "Reference run",
+        "state": {
+          "disabled": "Disabled",
+          "visible": "Visible",
+          "active": "Active",
+          "alarm": "Alarm"
+        }
+      }
+    },
+    "number": {
+      "drive_position": {
+        "name": "Travel position"
+      },
+      "slat_position": {
+        "name": "Slat position"
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Operating mode",
+        "state": {
+          "auto": "Automatic",
+          "manual": "Manual"
+        }
+      }
+    },
+    "switch": {
+      "automatic_lock": {
+        "name": "Automatic lock"
+      },
+      "actuator_lock": {
+        "name": "Actuator lock"
+      }
+    },
+    "binary_sensor": {
+      "rain": {
+        "name": "Rain"
+      },
+      "rain_alarm": {
+        "name": "Rain alarm"
+      },
+      "wind_alarm": {
+        "name": "Wind alarm"
+      },
+      "frost_alarm": {
+        "name": "Frost alarm"
+      }
+    },
+    "button": {
+      "building_automatic_mode": {
+        "name": "Building automatic mode"
+      }
+    }
   }
 }

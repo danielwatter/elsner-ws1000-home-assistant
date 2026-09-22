@@ -8,32 +8,37 @@ The integration communicates directly with the WS1000 over the local network usi
 
 ### Actuators
 - Automatic discovery of physical WS1000 actuators
-- Separate Home Assistant device for every physical actuator
+- Separate Home Assistant child device for every physical actuator
 - Native Cover control for windows, awnings and blinds
 - Open / close / stop
 - Current travel position
 - Writable travel position from 0–100 %
-- Current blind lamella position
-- Writable lamella position from 0–100 % for blinds
-- Operating mode **Auto / Manual**
-- **Auto-Sperre** per actuator
-- **Aktor-Sperre** per actuator
+- Current blind slat position
+- Writable slat position from 0–100 % for blinds
+- Operating mode **Automatic / Manual**
+- Automatic lock per actuator
+- Actuator lock per actuator
 - Per-actuator rain, wind and frost alarm states
 - Additional decoded WS1000 GUI_DF status information
 
 ### Building automation
-- **Gebäude auf Automatik** button on the WS1000 controller device
+- **Building automatic mode** button on the WS1000 controller device
 - The button is available when at least one actuator is in Manual mode
 - Pressing it returns all currently manual actuators to Automatic mode
-- Uses the confirmed per-actuator Auto command; no undocumented broadcast command is used
+- Uses the confirmed per-actuator automatic-mode command; no undocumented broadcast command is used
 
 ### Weather
-- Inside temperature
-- Inside humidity
-- Outside temperature
+- Indoor temperature
+- Indoor humidity
+- Outdoor temperature
 - Brightness / illuminance
 - Wind speed
 - Rain status
+
+### Localization
+- Full German and English localization for config flow, entity names, device names and translated enum/select states
+- Internal select and enum values are language-neutral (`auto`, `manual`, `disabled`, `visible`, `active`, `alarm`)
+- Entity unique IDs and device identifiers remain unchanged across language changes and upgrades
 
 The WS1000 itself remains responsible for its protection and automation logic. Home Assistant reads states and sends control commands but does not replace the controller's internal safety functions.
 
@@ -47,11 +52,12 @@ The integration uses a fixed polling interval of **1 second**. The polling inter
 
 ### HACS
 
-1. Add this GitHub repository to HACS as a **Custom repository** with category **Integration**.
-2. Install **Elsner WS1000** in HACS.
-3. Restart Home Assistant.
-4. Open **Settings → Devices & services → Add integration → Elsner WS1000**.
-5. Enter the IP address or hostname of the WS1000.
+1. Install **Elsner WS1000** from HACS.
+2. Restart Home Assistant.
+3. Open **Settings → Devices & services → Add integration → Elsner WS1000**.
+4. Enter the IP address or hostname of the WS1000.
+
+Until the repository is included in the HACS default catalog, add this GitHub repository to HACS as a **Custom repository** with category **Integration**.
 
 ### Manual installation
 
@@ -78,11 +84,13 @@ The host can later be changed through the integration's reconfigure dialog.
 Home Assistant creates:
 
 - one controller device **Elsner WS1000** for weather data and controller functions
+- one translated groups parent device for WS1000 user groups
 - one child device for every discovered physical actuator
+- one child device for every exposed WS1000 user group
 
-The actuator device name is read directly from the WS1000 configuration. Actuator identity is based on the WS1000 object ID and therefore does not depend on the configured display name.
+The actuator and group device names are read directly from the WS1000 configuration. Their identity is based on the WS1000 object ID and therefore does not depend on the configured display name.
 
-Virtual/group actuators are deliberately ignored.
+Only the confirmed WS1000 user-group range 0–19 is exposed. Internal system/alarm objects are not exposed as group covers.
 
 ## Position semantics
 
@@ -93,11 +101,11 @@ The native WS1000 position scale is:
 
 Home Assistant Cover position uses the opposite convention. The integration therefore inverts the value only for the native HA Cover state. Dedicated WS1000 position sensors and sliders retain the original Elsner 0–100 % semantics.
 
-For blinds, direct travel-position commands use the WS1000 combined position/lamella telegram:
+For blinds, direct travel-position commands use the WS1000 combined position/slat telegram:
 
-- travel position `0 %` → lamella position `0 %`
-- travel position `100 %` → lamella position `100 %`
-- intermediate travel positions preserve the currently known lamella target/value
+- travel position `0 %` → slat position `0 %`
+- travel position `100 %` → slat position `100 %`
+- intermediate travel positions preserve the currently known slat target/value
 
 Windows and awnings are unaffected by this blind-specific behavior.
 
@@ -105,226 +113,148 @@ Windows and awnings are unaffected by this blind-specific behavior.
 
 Home Assistant's native Cover STOP command uses the experimentally validated WS1000 stop sequence. Full UP and DOWN commands remain independent.
 
-## Alarm states
+## Alarm and GUI_DF states
 
 Per-actuator rain, wind and frost alarms use the decoded WS1000 GUI_DF status values:
 
-- `0` = Disabled
-- `1` = Visible
-- `2` = Highlighted / Active
-- `3` = Alarm
+- raw `0` = `disabled`
+- raw `1` = `visible`
+- raw `2` = `active`
+- raw `3` = `alarm`
 
-Dedicated binary alarm entities are active only when the corresponding raw state is `3`.
+Home Assistant translates these language-neutral internal states for display. Dedicated binary alarm entities are active only when the corresponding raw state is `3`.
+
+## Automation compatibility note for 1.4.0
+
+Version 1.4.0 changes the raw operating-mode options from the previous localized values to stable language-neutral values:
+
+- previous localized automatic option → `auto`
+- previous localized manual option → `manual`
+
+GUI_DF enum sensor states are likewise language-neutral internally:
+
+- previous localized disabled state → `disabled`
+- previous localized visible state → `visible`
+- previous localized active state → `active`
+- alarm state remains language-neutral as `alarm`
+
+Existing entity unique IDs and device identifiers are unchanged. Existing entity IDs are preserved by the Home Assistant entity registry. Automations or templates that compare the previous localized raw state strings must be updated once.
 
 ## Compatibility
 
 Developed and tested as a Home Assistant custom integration against a real Elsner WS1000 installation.
 
-The integration uses Home Assistant's current device-registry API, including `via_device_id`, and avoids the deprecated `via_device` parameter.
+The integration uses Home Assistant's current device-registry API, including native child devices and translated entity/device metadata.
 
-## Version 1.19.0
+## Version history
+
+### 1.4.0 – Full German and English localization
+
+- Added complete German and English translations for entity names, the groups parent device, config flow and enum/select states
+- Replaced localized raw operating-mode values with stable `auto` / `manual` options
+- Replaced localized GUI_DF enum values with stable `disabled` / `visible` / `active` / `alarm` states
+- Kept entity unique IDs, device identifiers, protocol bytes, movement commands and migration behavior unchanged
+- Converted integration source comments and changelog text to English
+- Updated the documentation for the new language-neutral automation values
+
+### 1.3.0 – First public GitHub/HACS master
+
+- Normalized public versioning to `1.3.0`
+- Added HACS packaging, validation workflows and public release metadata
+- Runtime protocol and entity behavior remained aligned with the preceding 1.23.0 development master
+
+### 1.23.0 – Structural cleanup
+
+- Moved registry migration/cleanup to `migration.py`
+- Reduced `__init__.py` to runtime data and config-entry lifecycle
+- Removed unused compatibility discovery wrappers and protocol helpers
+- Moved development/POC history from runtime code to `PROTOCOL.md`
+- Centralized fixed entity labels in preparation for translation-key migration
+- Kept protocol constants, command sequences, entity unique IDs and device identifiers unchanged
+
+### 1.22.1 – Home Assistant API / startup cleanup
+
+- `WS1000GroupCover` no longer uses the reserved Home Assistant Entity attribute `group`; the protocol object is stored as `ws1000_group`
+- Cached parent device IDs for both native child-device trees during integration setup
+- Reduced repeated Device Registry lookups during startup
+- Kept protocol bytes, movement commands, entity unique IDs and GUI_DF semantics unchanged
+
+### 1.22.0 – Code cleanup without functional changes
+
+- Read WS1000 topology once during setup through `discover_topology()`
+- Consolidated actuator and group movement helpers without changing public command behavior
+- Added the public `group_stop_unknown_direction()` fallback
+- Removed unused topology fields and obsolete translation preparation
+- Kept entity IDs, device identifiers, protocol bytes, positioning, STOP behavior and group range unchanged
+
+### 1.21.2 – Group migration to the dedicated groups parent
+
+- Added upgrade handling for existing group child devices
+- Recreated existing group child devices below the dedicated groups parent while keeping group identifiers and entity unique IDs stable
+- Kept groups strictly limited to protocol object IDs 0–19
+
+### 1.21.1 – Two independent parent devices
+
+- Added one parent device for physical actuators and one independent parent device for user groups
+- Kept both parents at the same hierarchy level; no nested child devices
+- Kept the confirmed user-group range 0–19 and excluded internal system/alarm objects
+
+### 1.21.0 – Native Home Assistant child devices
+
+- Converted physical actuators to native Home Assistant child devices
+- Added WS1000 user groups as native child devices
+- Removed artificial numeric display prefixes
+- Added migration for legacy actuator/group identifiers and cleanup of internal test groups
+
+### 1.19.0
 
 - Fixed polling interval at **1 second**
-- Removed polling-interval input from initial setup
-- Removed polling-interval input from reconfiguration
-- Setup now requires only the WS1000 IP address or hostname
-- Cleaned and consolidated README for the current integration state
-- No changes to the validated WS1000 protocol implementation or actuator-control behavior from 1.17
-
-## Previous notable changes
+- Removed polling-interval input from setup and reconfiguration
+- Setup requires only the WS1000 IP address or hostname
+- Consolidated documentation for the current integration state
 
 ### 1.17
-- Added the Elsner-style **Gebäude auf Automatik** controller button
-- Includes the blind end-position correction introduced during the 1.16.x development cycle
+
+- Added the controller-wide automatic-mode button
+- Included the blind end-position correction introduced during the 1.16.x development cycle
 
 ### 1.16
-- Added **Aktor-Sperre** using the official Elsner `Send_WS1000_Automatik_Flags` structure
-- Corrected blind end positions so direct `0 %` and `100 %` travel commands send the corresponding lamella end position in the same WS1000 telegram
+
+- Added actuator lock using the official Elsner automation-flags structure
+- Corrected blind end positions so direct `0 %` and `100 %` travel commands send the corresponding slat end position in the same WS1000 telegram
 
 ### 1.15
+
 - Added current position to native Home Assistant Cover entities
 - Preserved native Elsner position semantics for dedicated position sensors and controls
 
 ### 1.14
-- Added writable travel-position and lamella-position controls
+
+- Added writable travel-position and slat-position controls
 - Corrected actual/target position mapping
 - Added validated direct WS1000 position commands
 
 ### 1.13
+
 - Added decoded per-actuator GUI_DF status entities
 - Corrected GUI_DF state semantics
 
 ### 1.10
+
 - Added per-actuator rain, wind and frost alarm states
 
 ### 1.09
+
 - Added native Home Assistant Cover STOP support and refined the stop implementation
 
 ### 1.02
+
 - Introduced the controller/child-device structure used by the current integration
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See `LICENSE`.
 
 ## Notes
 
 This is an independent Home Assistant custom integration for Elsner WS1000 controllers. It communicates locally with the controller and does not require an external cloud service.
-
-
-## V1.21.0 - native Home Assistant Child Devices
-
-Basis: V1.19.1
-
-Gerätemodell:
-- Elsner WS1000 bleibt das physische Hauptgerät.
-- Physische Aktoren werden als native Home-Assistant-Child-Devices angelegt.
-- Benutzergruppen werden ebenfalls als native Child Devices angelegt.
-- Keine künstlichen 00/01/02-Präfixe.
-
-Gruppen:
-- Die WS1000 stellt 20 Benutzergruppen bereit.
-- Protokollseitig sind dies die Objekt-IDs 0..19.
-- Interne System-/Alarmobjekte wie Einbruch, Sabotage, Verschluss,
-  Störung, Überfall und technische Alarme (z.B. 70..76) werden niemals
-  als Gruppen-Cover angelegt.
-- Gruppen besitzen nur Hoch, Stop und Runter.
-- Keine Prozentposition und keine Lamellensteuerung für Gruppen.
-
-Migration:
-- Vorhandene Aktorgeräte werden soweit möglich in-place auf gültige
-  Child-Device-Identifier migriert, damit ihre HA-Geräte-ID erhalten bleibt.
-- Echte Gruppen aus unseren V1.20-Testversionen werden ebenfalls migriert.
-- Interne/technische Testgruppen ab ID 20 werden aus Device- und
-  Entity-Registry entfernt.
-
-Hinweis:
-Home Assistant Child Devices wurden mit Core 2026.9 eingeführt und sind
-laut HA-Entwicklerdokumentation noch ein neues API-Konzept.
-
-
-## V1.21.1 - Zwei unabhängige Parent-Geräte
-
-Native HA-Struktur:
-- `Elsner WS1000`
-  - alle physischen Aktoren als Child Devices
-- `Elsner WS1000 - Gruppen`
-  - ausschließlich die 20 Benutzergruppen-Slots (Protokoll-IDs 0..19)
-    als Child Devices
-
-Es gibt keine verschachtelten Child Devices. Beide Parent-Geräte sind
-gleichrangige Main Devices derselben Integration.
-
-Keine 00/01/02-Präfixe.
-
-Mehrsprachigkeit:
-Die semantische Bezeichnung für den Gruppen-Parent ist in den
-Übersetzungsdateien bereits als `Gruppen` / `Groups` vorbereitet. Der
-Device-Registry-Anzeigename selbst ist in dieser Version weiterhin
-`Elsner WS1000 - Gruppen`, da Home Assistant Device-Namen nicht über
-die normale Entity-Translation-API dynamisch lokalisiert.
-
-Die bestätigte Gruppenbegrenzung 0..19 bleibt unverändert; interne
-System-/Alarmobjekte 70..76 werden nicht exponiert.
-
-
-## V1.21.2 - Migration der Gruppen auf den zweiten Parent
-
-Fix für Upgrades von V1.21.0/V1.21.1:
-
-Home Assistant erlaubt bei Child Devices kein Reparenting in-place.
-Bereits vorhandene Gruppen-Children unter `Elsner WS1000` werden deshalb
-beim Start einmal aus der Device Registry entfernt und anschließend durch
-die normale Entity-Registrierung mit demselben Gruppen-Identifier unter
-`Elsner WS1000 - Gruppen` neu angelegt.
-
-Zielstruktur:
-
-Elsner WS1000
-- Fenster
-- Grosse Markise
-- Jalousie ...
-- Kleine Markise
-
-Elsner WS1000 - Gruppen
-- ALLE ohne Fenster
-- Jal. Str. / Gr. Markise
-- Jalousien
-- Markisen
-
-Entity-Unique-IDs und Gruppensteuerung bleiben unverändert.
-Gruppen bleiben strikt auf Protokoll-IDs 0..19 begrenzt.
-
-
-## V1.22.0 - Code Cleanup ohne Funktionsänderung
-
-Basis: V1.21.2
-
-Aufgeräumt:
-- WS1000-Konfiguration wird beim Setup nur noch einmal gelesen.
-  `discover_topology()` liefert Aktoren und Benutzergruppen gemeinsam.
-- Fahrlogik für Aktoren und Gruppen nutzt intern gemeinsame Helfer.
-  Die öffentlichen Methoden und Telegrammsequenzen bleiben unverändert.
-- `cover.py` greift für den Gruppen-STOP nicht mehr direkt auf die private
-  `_sequence()`-Methode des Protokollclients zu.
-- Öffentliche Fallback-Methode `group_stop_unknown_direction()` ergänzt.
-- Nicht verwendete `channel`-Felder aus den Topologie-Dataclasses entfernt.
-- Registry-Migrationscode in `__init__.py` klarer gegliedert.
-- Unbenutzte vorbereitende `device_labels`-Übersetzung entfernt; bestehende
-  funktionierende Übersetzungen bleiben unverändert.
-
-Bewusst unverändert:
-- Entity Unique IDs
-- Entity-Namen und Entity IDs
-- Device-Identifier
-- beide Parent-Geräte und Child-Device-Hierarchie
-- Wetter-/GUI_DF-/Alarmdecodierung
-- Position/Lamellensteuerung
-- Auto/Manuell, Auto-Sperre und Aktor-Sperre
-- Smart STOP
-- Gruppensteuerung und Gruppenbereich 0..19
-- alle bestätigten Telegrammbytes und Fahrsequenzen
-
-
-## V1.22.1 - Home Assistant API / Startup Cleanup
-
-Fixes:
-- `WS1000GroupCover` no longer uses the reserved Home Assistant Entity
-  attribute `group`. The protocol object is stored as `ws1000_group`.
-  This removes the HA 2027.2 compatibility warning:
-  `sets a group attribute ... which is not a Group instance`.
-- Parent device IDs for both native Child-Device trees are cached once during
-  integration setup. Per-entity DeviceInfo construction no longer performs
-  repeated Device Registry lookups for the same parent IDs.
-- This reduces unnecessary startup work for the large number of GUI_DF
-  entities and addresses the observed one-off slow-state warning path.
-
-Unchanged:
-- entity unique IDs and entity names
-- device identifiers / child hierarchy
-- protocol bytes and movement commands
-- sensors, alarms, GUI_DF semantics
-- positioning, Smart STOP and group control
-
-
-## V1.23.0 - Structural cleanup
-
-No functional protocol or entity behavior was intentionally changed.
-
-- registry migration/cleanup moved to `migration.py`
-- `__init__.py` reduced to runtime data and config-entry lifecycle
-- unused compatibility discovery wrappers removed
-- unused protocol helper removed
-- development/POC history moved from runtime code to `PROTOCOL.md`
-- established German fixed entity labels centralized in `labels.py`
-- dynamic WS1000 names remain dynamic and unchanged
-- protocol constants, command sequences, entity unique IDs and device
-  identifiers were checked automatically against V1.22.1
-## V1.3.0 - New master version
-
-Release/versioning cleanup only. No functional protocol or entity behavior was intentionally changed compared with V1.23.0.
-
-- version normalized to `1.3.0` for the new GitHub/HACS master
-- runtime logic unchanged
-- protocol commands unchanged
-- entity unique IDs unchanged
-- device identifiers unchanged
-- migration behavior unchanged
-
-

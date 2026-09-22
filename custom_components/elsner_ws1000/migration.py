@@ -58,9 +58,9 @@ def ensure_groups_parent_device(hass: HomeAssistant, entry: ConfigEntry):
     return registry.async_get_or_create(
         config_entry_id=entry.entry_id,
         identifiers={(DOMAIN, f"{entry.entry_id}:groups")},
-        name="Elsner WS1000 - Gruppen",
+        translation_key="groups_controller",
         manufacturer="Elsner Elektronik",
-        model="WS1000 Gruppen",
+        model="WS1000 Groups",
         configuration_url=f"http://{entry.data[CONF_HOST]}",
     )
 

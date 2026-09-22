@@ -1,29 +1,28 @@
 from dataclasses import dataclass
 
-from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
+from homeassistant.components.binary_sensor import BinarySensorDeviceClass, BinarySensorEntity
 
 from .entity import WS1000Entity, drive_device_info
-from .labels import NAME_FROST_ALARM, NAME_RAIN, NAME_RAIN_ALARM, NAME_WIND_ALARM
 
 
 @dataclass(frozen=True)
 class Desc:
     key: str
-    name: str
+    translation_key: str
     device_class: BinarySensorDeviceClass | None = None
     icon: str | None = None
 
 
 # Controller/weather-level binary sensors.
 WEATHER_DESCS = (
-    Desc("rain", NAME_RAIN, BinarySensorDeviceClass.MOISTURE),
+    Desc("rain", "rain", BinarySensorDeviceClass.MOISTURE),
 )
 
 # Per-actuator alarm/protection states.
 DRIVE_ALARM_DESCS = (
-    Desc("rain_alarm", NAME_RAIN_ALARM, None, "mdi:weather-rainy"),
-    Desc("wind_alarm", NAME_WIND_ALARM, None, "mdi:weather-windy"),
-    Desc("frost_alarm", NAME_FROST_ALARM, None, "mdi:snowflake"),
+    Desc("rain_alarm", "rain_alarm", None, "mdi:weather-rainy"),
+    Desc("wind_alarm", "wind_alarm", None, "mdi:weather-windy"),
+    Desc("frost_alarm", "frost_alarm", None, "mdi:snowflake"),
 )
 
 
@@ -52,7 +51,7 @@ class WS1000WeatherBinarySensor(WS1000Entity, BinarySensorEntity):
     def __init__(self, coordinator, entry, desc):
         super().__init__(coordinator, entry, f"binary_{desc.key}")
         self.desc = desc
-        self._attr_name = desc.name
+        self._attr_translation_key = desc.translation_key
         self._attr_device_class = desc.device_class
         self._attr_icon = desc.icon
 
@@ -72,7 +71,7 @@ class WS1000DriveAlarmBinarySensor(WS1000Entity, BinarySensorEntity):
         )
         self.drive = drive
         self.desc = desc
-        self._attr_name = desc.name
+        self._attr_translation_key = desc.translation_key
         self._attr_device_class = desc.device_class
         self._attr_icon = desc.icon
 

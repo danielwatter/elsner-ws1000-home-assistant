@@ -6,7 +6,6 @@ from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.const import PERCENTAGE
 
 from .entity import WS1000Entity, drive_device_info
-from .labels import NAME_DRIVE_POSITION, NAME_TILT_POSITION
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -49,7 +48,7 @@ class WS1000BaseNumber(WS1000Entity, NumberEntity):
 
 
 class WS1000DrivePositionNumber(WS1000BaseNumber):
-    _attr_name = NAME_DRIVE_POSITION
+    _attr_translation_key = "drive_position"
     _attr_icon = "mdi:arrow-expand-vertical"
 
     def __init__(self, coordinator, entry, drive):
@@ -62,9 +61,9 @@ class WS1000DrivePositionNumber(WS1000BaseNumber):
 
     @property
     def native_value(self):
-        # Prefer the WS1000 target value (Sollposition). When the controller
-        # has no active/valid target (e.g. after the drive has stopped), fall
-        # back to the actual position. This mirrors the Elsner app display.
+        # Prefer the WS1000 target value. When the controller has no active
+        # target, fall back to the actual position. This mirrors the Elsner
+        # app display.
         status = self._status()
         value = status.get("target_position")
         if value is None:
@@ -75,13 +74,10 @@ class WS1000DrivePositionNumber(WS1000BaseNumber):
         status = self._status()
         position = int(round(value))
 
-        # The WS1000 B command always sends travel position and lamella
-        # position together. For blinds, the two travel end positions also
-        # have defined lamella end positions in the native Elsner UI:
-        #   0 % travel   -> 0 % lamella
-        #   100 % travel -> 100 % lamella
-        # Preserve the currently known lamella target only for intermediate
-        # travel positions.
+        # The WS1000 B command always sends travel and slat position together.
+        # For blinds, both travel end positions also have defined slat end
+        # positions in the native Elsner UI. Preserve the current slat target
+        # only for intermediate travel positions.
         if self.drive.kind == "blind" and position in (0, 100):
             tilt = position
         else:
@@ -101,7 +97,7 @@ class WS1000DrivePositionNumber(WS1000BaseNumber):
 
 
 class WS1000DriveTiltNumber(WS1000BaseNumber):
-    _attr_name = NAME_TILT_POSITION
+    _attr_translation_key = "slat_position"
     _attr_icon = "mdi:blinds-horizontal"
 
     def __init__(self, coordinator, entry, drive):
@@ -114,8 +110,8 @@ class WS1000DriveTiltNumber(WS1000BaseNumber):
 
     @property
     def native_value(self):
-        # Prefer the target lamella value. If no valid target is reported,
-        # use the actual lamella position, like the Elsner app.
+        # Prefer the target slat value. If no valid target is reported, use
+        # the actual slat position, like the Elsner app.
         status = self._status()
         value = status.get("target_tilt")
         if value is None:
@@ -125,8 +121,8 @@ class WS1000DriveTiltNumber(WS1000BaseNumber):
     async def async_set_native_value(self, value):
         status = self._status()
 
-        # Preserve the currently known travel position when only the
-        # lamella slider is changed.
+        # Preserve the currently known travel position when only the slat
+        # slider is changed.
         position = status.get("target_position")
         if position is None:
             position = status.get("position")

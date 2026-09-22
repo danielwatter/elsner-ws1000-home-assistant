@@ -19,9 +19,9 @@ def groups_controller_device_info(entry):
     """Return the independent parent device for WS1000 user groups."""
     return {
         "identifiers": {(DOMAIN, f"{entry.entry_id}:groups")},
-        "name": "Elsner WS1000 - Gruppen",
+        "translation_key": "groups_controller",
         "manufacturer": "Elsner Elektronik",
-        "model": "WS1000 Gruppen",
+        "model": "WS1000 Groups",
         "configuration_url": f"http://{entry.data['host']}",
     }
 
