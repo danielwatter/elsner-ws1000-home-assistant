@@ -124,6 +124,13 @@ Per-actuator rain, wind and frost alarms use the decoded WS1000 GUI_DF status va
 
 Home Assistant translates these language-neutral internal states for display. Dedicated binary alarm entities are active only when the corresponding raw state is `3`.
 
+### 1.4.1 – Fix window cover position semantics
+
+- Fixed incorrect Home Assistant cover state and position for window actuators
+- Elsner window positions now map directly to Home Assistant: `0 = closed`, `100 = open`
+- Blind and awning position handling remains unchanged
+- No changes to movement commands, entity unique IDs or device identifiers
+
 ## Automation compatibility note for 1.4.0
 
 Version 1.4.0 changes the raw operating-mode options from the previous localized values to stable language-neutral values:
