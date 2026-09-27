@@ -74,7 +74,13 @@ class WS1000Cover(WS1000Entity, CoverEntity):
         position = status.get("position")
         if position is None:
             return None
-        return 100 - int(position)
+
+        position = int(position)
+
+        if self.drive.kind == "window":
+            return position
+
+        return 100 - position
 
     @property
     def is_closed(self):
