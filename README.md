@@ -147,6 +147,13 @@ Developed and tested as a Home Assistant custom integration against a real Elsne
 The integration uses Home Assistant's current device-registry API, including native child devices and translated entity/device metadata.
 
 ## Version history
+### 1.4.2 – Branding cleanup
+
+- Removed redundant icon and logo files from the integration root directory
+- Kept the branding assets in the dedicated `brand/` directory
+- Implemented the cleanup suggested during the official HACS repository review
+- No functional changes to entities, device identifiers or WS1000 communication
+
 ### 1.4.1 – Fix window cover position semantics
 
 - Fixed incorrect Home Assistant cover state and position for window actuators
